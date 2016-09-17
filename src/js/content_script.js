@@ -5,14 +5,14 @@ chrome.storage.sync.get(null, function (data) {
 	chrome.storage.sync.set({
             'rules': []
 	});
-	
+
 	ruleSet = [];
     }
     else{
 	ruleSet = data.rules;
     }
-	
-	
+
+
 
     if (typeof data.regexStatus === 'undefined') {
         chrome.storage.sync.set({
@@ -75,11 +75,15 @@ function walk(node) {
     }
 }
 
+function textModified(ev) {
+  walk(ev.target)
+}
+
 function handleText(textNode) {
     var v = textNode.nodeValue;
     var regex;
 
-
+    document.removeEventListener('DOMNodeInserted', textModified);
     for (var i = 0; i < ruleSet.length; i++) {
         var rule = ruleSet[i];
 
@@ -87,4 +91,6 @@ function handleText(textNode) {
         v = v.replace(regex, rule.replaceString);
         textNode.nodeValue = v;
     }
+    document.addEventListener('DOMNodeInserted', textModified);
+
 }
