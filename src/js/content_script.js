@@ -43,9 +43,10 @@ chrome.storage.sync.get('regexStatus', function (data) {
     }
     else {
         if (parseInt(data.regexStatus)) {
-            walk(document.body);
-            if (document.URL.indexOf('google.com') != -1)
-              document.addEventListener('DOMNodeInserted', textModified);
+            if (document.URL.indexOf('google.com') != -1) {
+                walk(document.body);
+                document.addEventListener('DOMNodeInserted', textModified);
+            }
         }
     }
 });
@@ -80,6 +81,12 @@ function walk(node) {
 function textModified(ev) {
   walk(ev.target)
 }
+
+chrome.runtime.onMessage.addListener(function(msg) {
+    if (msg.action && (msg.action == "apply-regex-replacement")) {
+        walk(document.body);
+    }
+});
 
 function handleText(textNode) {
     var v = textNode.nodeValue;
