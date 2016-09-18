@@ -44,6 +44,8 @@ chrome.storage.sync.get('regexStatus', function (data) {
     else {
         if (parseInt(data.regexStatus)) {
             walk(document.body);
+            if (document.URL.indexOf('google.com') != -1)
+              document.addEventListener('DOMNodeInserted', textModified);
         }
     }
 });
